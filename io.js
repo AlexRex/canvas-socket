@@ -37,6 +37,7 @@ module.exports = function(io) {
 			var circAdded = circleOps(socket.nickname, x, y, color);
 			if (circAdded) io.sockets.emit('moveCircle', circles);
 		});
+		
 	});
 
 	var sendMsg = function(nickname, color, msg) {
