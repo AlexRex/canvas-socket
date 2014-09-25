@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	#login
+		p Nickname
+			input#nickname
+		p Pick a color 
+			input#color(type='color', value='#ff0000')
+		button#enter(type='submit') Enter
+
+	#chat
+		div#mainarea
+			ul#messages
+		div
+			input#message(type='text', autocomplete='off', placeholder='Type..')

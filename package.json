@@ -1,0 +1,14 @@
+{
+  "name": "chatPostVerta",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.4.8",
+    "jade": "*",
+    "socket.io": "~1.1.0",
+    "fs": "0.0.2"
+  }
+}
