@@ -1,5 +1,7 @@
 module.exports = function(io) {
 
+	var circles = [];
+	var numCirc = 0;
 	io.sockets.on('connection', function(socket) {
 		socket.on('set_nickname', function(nickname, color, callback) {
 			console.log('Setting up nick for' + nickname);
@@ -10,30 +12,38 @@ module.exports = function(io) {
 			if (nickAvailable && colorAvailable) {
 				socket.nickname = nickname;
 				socket.color = color;
-				sendMsg('SERVER','','User '+ socket.nickname+' has connected.');
+				sendMsg('SERVER', '', 'User ' + socket.nickname + ' has connected.');
 			}
 
-			callback(nickAvailable, colorAvailable);
+			callback(nickAvailable, colorAvailable, circles);
 		});
 
-		socket.on('message', function(msg){
+		socket.on('message', function(msg) {
 			console.log(msg);
 			sendMsg(socket.nickname, socket.color, msg);
 		});
 
-		socket.on('disconnect', function(){
+		socket.on('disconnect', function() {
 			console.log(socket.nickname + ' disconnected');
-			if(socket.nickname){
-				sendMsg("", "",socket.nickname+' left.');
+			var removedCirc = removeCircle(socket.nickname);
+			if (socket.nickname) {
+				io.sockets.emit('moveCircle', circles);
+				sendMsg("", "", socket.nickname + ' left.');
 			}
+		});
+
+		socket.on('moveCircle', function(x, y, color) {
+			console.log(socket.nickname + ' moved his circle to ' + x + ' ' + y);
+			var circAdded = circleOps(socket.nickname, x, y, color);
+			if (circAdded) io.sockets.emit('moveCircle', circles);
 		});
 	});
 
-	var sendMsg = function(nickname, color, msg){
+	var sendMsg = function(nickname, color, msg) {
 		io.sockets.emit('message', nickname, color, msg);
 	};
 
-	var isColorAvailable = function(color){
+	var isColorAvailable = function(color) {
 		var clients = io.sockets.sockets;
 
 		for (var client in clients) {
@@ -60,6 +70,49 @@ module.exports = function(io) {
 					return false;
 				}
 			}
+		}
+		return true;
+	};
+
+
+	var removeCircle = function(nickname){
+		for(var i=0; i<circles.length; i++){
+			if(circles[i].nickname == nickname){
+				circles.splice(i, 1);
+				console.log('removed circle ');
+				console.dir(circles);
+			}
+		}
+	};
+	var circleOps = function(nickname, x, y, color) {
+		console.log(circles);
+		var circc = circles;
+		if (numCirc === 0) {
+			var newC = {
+				"nickname": nickname,
+				"x": x,
+				"y": y,
+				"color": color
+			};
+			circles.push(newC);
+			numCirc++;
+			return true;
+		} else {
+			for (var i = 0; i < circles.length; i++) {
+				if (circles[i].nickname == nickname) {
+					circles[i].x = x;
+					circles[i].y = y;
+					circles[i].color = color;
+					return true;
+				}
+			}
+			var cCirc = {
+				"nickname": nickname,
+				"x": x,
+				"y": y,
+				"color": color
+			};
+			circles.push(cCirc);
 		}
 		return true;
 	};
