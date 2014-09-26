@@ -70,6 +70,7 @@ $(function() {
 		$login.hide();
 		$chat.show();
 
+
 		$message.keyup(function(e) {
 			var code = e.wich || e.keyCode;
 
@@ -91,7 +92,8 @@ $(function() {
 
 	var addMessage = function(nickname, color, msg) {
 		$("#messages").append($("<li><h3 style='color:" + color + ";'>" + nickname + "</h3>  " + msg + "</li>"));
-	
+		$('ul li:last-child').show('slow', function() {
+			$("#mainarea").scrollTop($("#mainarea")[0].scrollHeight);});
 	};
 
 

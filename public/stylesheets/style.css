@@ -6,3 +6,8 @@ body {
 a {
   color: #00B7FF;
 }
+
+#mainarea{
+	overflow: auto;
+	height: 200px;
+}
