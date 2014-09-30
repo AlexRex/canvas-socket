@@ -1,13 +1,35 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
 }
 
 a {
   color: #00B7FF;
 }
 
-#mainarea{
+#mess{
 	overflow: auto;
-	height: 200px;
+	height: 426px;
+}
+
+#message{
+	margin-bottom: 3px;
+}
+
+ul{
+	list-style: none;
+}
+
+.userName{
+	font-size: 16px;
+}
+
+.serverMsg{
+	opacity: 0.7;
+	text-align: center;
+}
+
+#login{
+	text-align: center;
 }

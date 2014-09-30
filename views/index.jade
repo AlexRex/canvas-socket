@@ -2,15 +2,15 @@ extends layout
 
 block content
 	#login
-		p Nickname
+		p Nickname  
 			input#nickname
-		p Pick a color 
-			input#color(type='color', value='#ff0000')
-		button#enter(type='submit') Enter
+		button#enter.btn.btn-primary(type='submit') Enter
 
-	#chat
-		div#mainarea
-			ul#messages
-		div
-			input#message(type='text', autocomplete='off', placeholder='Type..')
-		canvas#canvas(width="500", height="500", style="border:1px solid #000000;")
+	#chat.row
+		div#mainarea.col-md-6.panel.panel-default.well
+			div#mess
+				ul#messages
+			div
+				input#message.form-control(type='text', autocomplete='off', placeholder='Type..')
+		div.col-md-6
+			canvas#canvas(width="500", height="500", style="border:1px solid #999999;")

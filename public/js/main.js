@@ -7,7 +7,14 @@ $(function() {
 	var canvas = document.getElementById('canvas');
 	var circles = [];
 	var myCircle = {};
-	var ownNickname, ownColor;
+	var ownNickname;
+
+	var colors = ["#1abc9c","#2ecc71","#3498db","#9b59b6","#34495e","#f1c40f",
+	"#e67e22","#e74c3c","#ecf0f1","#16a085","#27ae60","#2980b9","#8e44ad",
+	"#2c3e50","#f39c12","#d35400","#c0392b","#bdc3c7"];
+
+	var random = Math.floor((Math.random() * colors.length)),
+	ownColor = colors[random];
 
 	var socket = io.connect('/');
 
@@ -21,11 +28,9 @@ $(function() {
 	var init = function() {
 		$chat.hide();
 
-		$("#color").val("#" + Math.floor((Math.random() * 999999) + 1));
-
+		
 		$("#enter").click(function() {
 			ownNickname = $("#nickname").val();
-			ownColor = $("#color").val();
 			confUser(ownNickname, ownColor);
 
 		});
@@ -34,8 +39,7 @@ $(function() {
 
 			if (code == 13) {
 				ownNickname = $(this).val();
-				ownColor = $("#color").val();
-				confUser($(this).val(), $("#color").val());
+				confUser($(this).val(), ownColor);
 			}
 		});
 
@@ -74,13 +78,16 @@ $(function() {
 		$message.keyup(function(e) {
 			var code = e.wich || e.keyCode;
 
-			if (code == 13) {
+			if (code == 13 && $message.val()!='') {
 				sendMessage($message.val());
 			}
 		});
 
-		socket.on('message', function(nickname, color, msg) {
-			addMessage(nickname, color, msg);
+		socket.on('message', function(nickname, color, msg, type) {
+			if(type=='user')
+			   addMessage(nickname, color, msg);
+			else if(type=='server')
+				addServerMessage(msg);
 		});
 
 	};
@@ -91,9 +98,15 @@ $(function() {
 	};
 
 	var addMessage = function(nickname, color, msg) {
-		$("#messages").append($("<li><h3 style='color:" + color + ";'>" + nickname + "</h3>  " + msg + "</li>"));
+		$("#messages").append($("<li><strong><span class='userName' style='color:" + color + ";'>" + nickname + "</span></strong>  " + msg + "</li>"));
 		$('ul li:last-child').show('slow', function() {
-			$("#mainarea").scrollTop($("#mainarea")[0].scrollHeight);});
+			$("#mess").scrollTop($("#mess")[0].scrollHeight);});
+	};
+
+	var addServerMessage = function(msg){
+		$("#messages").append($("<li class='serverMsg'>" + msg + "</li>"));
+		$('ul li:last-child').show('slow', function() {
+			$("#mess").scrollTop($("#mess")[0].scrollHeight);});
 	};
 
 
@@ -171,7 +184,7 @@ $(function() {
 		context.fillStyle = color;
 		context.fill();
 		context.lineWidth = 5;
-		context.strokeStyle = '#003300';
+		context.strokeStyle = '#033330';
 		context.stroke();
 	};
 

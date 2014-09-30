@@ -9,18 +9,18 @@ module.exports = function(io) {
 			var nickAvailable = isAvailable(nickname);
 			var colorAvailable = isColorAvailable(color);
 
-			if (nickAvailable && colorAvailable) {
+			if (nickAvailable /*&& colorAvailable*/) {
 				socket.nickname = nickname;
 				socket.color = color;
-				sendMsg('SERVER', '', 'User ' + socket.nickname + ' has connected.');
+				sendMsg('', '', 'User ' + socket.nickname + ' has connected', 'server');
 			}
 
-			callback(nickAvailable, colorAvailable, circles);
+			callback(nickAvailable, true, circles);
 		});
 
 		socket.on('message', function(msg) {
 			console.log(msg);
-			sendMsg(socket.nickname, socket.color, msg);
+			sendMsg(socket.nickname, socket.color, msg, 'user');
 		});
 
 		socket.on('disconnect', function() {
@@ -28,7 +28,7 @@ module.exports = function(io) {
 			var removedCirc = removeCircle(socket.nickname);
 			if (socket.nickname) {
 				io.sockets.emit('moveCircle', circles);
-				sendMsg("", "", socket.nickname + ' left.');
+				sendMsg("", "", socket.nickname + ' left', 'server');
 			}
 		});
 
@@ -40,8 +40,8 @@ module.exports = function(io) {
 		
 	});
 
-	var sendMsg = function(nickname, color, msg) {
-		io.sockets.emit('message', nickname, color, msg);
+	var sendMsg = function(nickname, color, msg, type) {
+		io.sockets.emit('message', nickname, color, msg, type);
 	};
 
 	var isColorAvailable = function(color) {
