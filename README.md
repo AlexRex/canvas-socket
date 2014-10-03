@@ -18,5 +18,8 @@ After running go to this address:
 	http://locahost:3000/
 	
 
+### Live example
+
+http://chatcircles.herokuapp.com/
 	
 ###Enjoy!
