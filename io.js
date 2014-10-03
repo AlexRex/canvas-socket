@@ -1,5 +1,6 @@
 module.exports = function(io) {
 
+//comm
 	var circles = [];
 	var numCirc = 0;
 	io.sockets.on('connection', function(socket) {
